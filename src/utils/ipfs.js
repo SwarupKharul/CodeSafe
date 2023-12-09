@@ -17,7 +17,7 @@ export const client = ipfsClient({
 export async function uploadToIPFS(Jdata) {
     const data = JSON.stringify(Jdata)
     const added = await client.add(data)
-    const url = `https://ethindia23.infura-ipfs.io/ipfs/${added.path}`;
+    const url = `https://unfold23.infura-ipfs.io/ipfs/${added.path}`;
     /* after file is uploaded to IPFS, return the URL to use it in the transaction */
     return url;
 }

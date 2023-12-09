@@ -1,7 +1,6 @@
-// const fs = require("fs");
+const fs = require("fs");
 const path = require("path");
-const Web3Modal = require("web3modal");
-// import Web3Modal from "web3modal";
+
 
 const {
     SubscriptionManager,
@@ -14,46 +13,45 @@ const {
 const functionsConsumerAbi = require("./abi/functionsClient.json");
 const ethers = require("ethers");
 
-const consumerAddress = "0x8dFf78B7EE3128D00E90611FBeD20A71397064D9"; // REPLACE this with your Functions consumer address
-const subscriptionId = 1143; // REPLACE this with your subscription ID
-const web3Modal = new Web3Modal();
+const consumerAddress = "0x600D3E52e9C6442fcdaDd0a02aF1222FE708836F"; // REPLACE this with your Functions consumer address
+const subscriptionId = 1833; // REPLACE this with your subscription ID
 
 
 // hardcoded for Polygon Mumbai
 const makeRequestMumbai = async () => {
     // hardcoded for Polygon Mumbai
-    const routerAddress = "0x6E2dc0F9DB014aE19888F539E59285D2Ea04244C";
+    const routerAddress = "0xb83E47C2bC239B3bf370bc41e1459A34b41238D0";
     const linkTokenAddress = "0x326C977E6efc84E512bB9C30f76E30c160eD06FB";
-    const donId = "fun-polygon-mumbai-1";
+    const donId = "fun-ethereum-sepolia-1";
     const explorerUrl = "https://mumbai.polygonscan.com";
 
     // Initialize functions settings
-    // const source = fs
-    //     .readFileSync(path.resolve(__dirname, "source.js"))
-    //     .toString();
+    const source = fs
+        .readFileSync(path.resolve(__dirname, "source.js"))
+        .toString();
     // console.log("source", source)
 
-    const source = `
-    // calculate geometric mean off-chain by a DON then return the result
-    // valures provided in args array
-    
-    console.log("calculate geometric mean of: ", args);
-    
-    // make sure arguments are provided
-    if (!args || args.length === 0) throw new Error("input not provided");
-    
-    const product = args.reduce((accumulator, currentValue) => {
-        const numValue = parseInt(currentValue);
-        if (isNaN(numValue)) throw Error(currentValue , "is not a number");
-        return accumulator * numValue;
-    }, 1); // calculate the product of numbers provided in args array
-    
-    const geometricMean = Math.pow(product, 1 / args.length); // geometric mean = length-root of (product)
-    console.log("geometric mean is: ", geometricMean.toFixed(2));
-    
-    // Decimals are not handled in Solidity so multiply by 100 (for 2 decimals) and round to the nearest integer
-    // Functions.encodeUint256: Return a buffer from uint256
-    return Functions.encodeUint256(Math.round(geometricMean * 100));`
+    // const source = `
+    // // calculate geometric mean off-chain by a DON then return the result
+    // // valures provided in args array
+
+    // console.log("calculate geometric mean of: ", args);
+
+    // // make sure arguments are provided
+    // if (!args || args.length === 0) throw new Error("input not provided");
+
+    // const product = args.reduce((accumulator, currentValue) => {
+    //     const numValue = parseInt(currentValue);
+    //     if (isNaN(numValue)) throw Error(currentValue , "is not a number");
+    //     return accumulator * numValue;
+    // }, 1); // calculate the product of numbers provided in args array
+
+    // const geometricMean = Math.pow(product, 1 / args.length); // geometric mean = length-root of (product)
+    // console.log("geometric mean is: ", geometricMean.toFixed(2));
+
+    // // Decimals are not handled in Solidity so multiply by 100 (for 2 decimals) and round to the nearest integer
+    // // Functions.encodeUint256: Return a buffer from uint256
+    // return Functions.encodeUint256(Math.round(geometricMean * 100));`
 
     const args = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10"];
     const gasLimit = 300000;
@@ -65,7 +63,7 @@ const makeRequestMumbai = async () => {
             "private key not provided - check your environment variables"
         );
 
-    const rpcUrl = "https://rpc-mumbai.maticvigil.com/" // || process.env.POLYGON_MUMBAI_RPC_URL; // fetch mumbai RPC URL
+    const rpcUrl = "https://rpc.sepolia.org" // || process.env.POLYGON_MUMBAI_RPC_URL; // fetch mumbai RPC URL
     console.log("rpcUrl", rpcUrl)
     // https://rpc-mumbai.maticvigil.com
     if (!rpcUrl)
@@ -73,10 +71,8 @@ const makeRequestMumbai = async () => {
 
     // console.log(ethers)
 
-
-    const connection = await web3Modal.connect();
-    const provider = new ethers.providers.Web3Provider(connection);
-    console.log("provider", provider)
+    // const network = { name: "maticmum", chainId: 80001 }
+    const provider = new ethers.providers.JsonRpcProvider(rpcUrl);
 
     const wallet = new ethers.Wallet(privateKey);
     const signer = wallet.connect(provider); // create ethers signer for signing transactions
