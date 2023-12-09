@@ -16,44 +16,19 @@ const ethers = require("ethers");
 const consumerAddress = "0xA16F4E891e1b2537cA25C51760C187C2b3e79a8E"; // REPLACE this with your Functions consumer address
 const subscriptionId = 1833; // REPLACE this with your subscription ID
 
+const routerAddress = "0xb83E47C2bC239B3bf370bc41e1459A34b41238D0";
+const linkTokenAddress = "0x779877A7B0D9E8603169DdbD7836e478b4624789";
+const donId = "fun-ethereum-sepolia-1";
+const explorerUrl = "https://mumbai.polygonscan.com";
+
 
 // hardcoded for Polygon Mumbai
-const makeRequestMumbai = async () => {
-    // hardcoded for Polygon Mumbai
-    const routerAddress = "0xb83E47C2bC239B3bf370bc41e1459A34b41238D0";
-    const linkTokenAddress = "0x779877A7B0D9E8603169DdbD7836e478b4624789";
-    const donId = "fun-ethereum-sepolia-1";
-    const explorerUrl = "https://mumbai.polygonscan.com";
+export default async function handler(req, res) {
 
-    // Initialize functions settings
-    const source = fs
-        .readFileSync(path.resolve(__dirname, "source.js"))
-        .toString();
-    // console.log("source", source)
+    const body = req.body;
 
-    // const source = `
-    // // calculate geometric mean off-chain by a DON then return the result
-    // // valures provided in args array
-
-    // console.log("calculate geometric mean of: ", args);
-
-    // // make sure arguments are provided
-    // if (!args || args.length === 0) throw new Error("input not provided");
-
-    // const product = args.reduce((accumulator, currentValue) => {
-    //     const numValue = parseInt(currentValue);
-    //     if (isNaN(numValue)) throw Error(currentValue , "is not a number");
-    //     return accumulator * numValue;
-    // }, 1); // calculate the product of numbers provided in args array
-
-    // const geometricMean = Math.pow(product, 1 / args.length); // geometric mean = length-root of (product)
-    // console.log("geometric mean is: ", geometricMean.toFixed(2));
-
-    // // Decimals are not handled in Solidity so multiply by 100 (for 2 decimals) and round to the nearest integer
-    // // Functions.encodeUint256: Return a buffer from uint256
-    // return Functions.encodeUint256(Math.round(geometricMean * 100));`
-
-    const args = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10"];
+    const source = body.source;
+    const args = body.args;
     const gasLimit = 300000;
 
     // Initialize ethers signer and provider to interact with the contracts onchain
@@ -65,7 +40,6 @@ const makeRequestMumbai = async () => {
 
     const rpcUrl = "https://eth-sepolia.g.alchemy.com/v2/CEF87mGhaWQ0JjkM7-zekgygM-ABZVdg" // || process.env.POLYGON_MUMBAI_RPC_URL; // fetch mumbai RPC URL
     console.log("rpcUrl", rpcUrl)
-    // https://rpc-mumbai.maticvigil.com
     if (!rpcUrl)
         throw new Error(`rpcUrl not provided  - check your environment variables`);
 
@@ -77,68 +51,7 @@ const makeRequestMumbai = async () => {
     const wallet = new ethers.Wallet(privateKey);
     const signer = wallet.connect(provider); // create ethers signer for signing transactions
 
-    ///////// START SIMULATION ////////////
-
-    console.log("Start simulation...");
-
-    const response = await simulateScript({
-        source: source,
-        args: args,
-        bytesArgs: [], // bytesArgs - arguments can be encoded off-chain to bytes.
-        secrets: {}, // no secrets in this example
-    });
-
-    console.log("Simulation result", response);
-    const errorString = response.errorString;
-    if (errorString) {
-        console.log(`❌ Error during simulation: `, errorString);
-    } else {
-        const returnType = ReturnType.uint256;
-        const responseBytesHexstring = response.responseBytesHexstring;
-        // if (ethers.utils.arrayify(responseBytesHexstring).length > 0) {
-        const decodedResponse = decodeResult(
-            response.responseBytesHexstring,
-            returnType
-        );
-        console.log(`✅ Decoded response to ${returnType}: `, decodedResponse);
-        // }
-    }
-
-    //////// ESTIMATE REQUEST COSTS ////////
-    console.log("\nEstimate request costs...", signer);
-    // Initialize and return SubscriptionManager
-    const subscriptionManager = new SubscriptionManager({
-        signer: signer,
-        linkTokenAddress: linkTokenAddress,
-        functionsRouterAddress: routerAddress,
-    });
-
-    await subscriptionManager.initialize();
-
-    // estimate costs in Juels
-
-    const gasPriceWei = await signer.getGasPrice(); // get gasPrice in wei
-
-    const estimatedCostInJuels =
-        await subscriptionManager.estimateFunctionsRequestCost({
-            donId: donId, // ID of the DON to which the Functions request will be sent
-            subscriptionId: subscriptionId, // Subscription ID
-            callbackGasLimit: gasLimit, // Total gas used by the consumer contract's callback
-            gasPriceWei: BigInt(gasPriceWei), // Gas price in gWei
-        });
-
-    console.log(
-        `Fulfillment cost estimated to ${ethers.utils.formatEther(
-            estimatedCostInJuels
-        )} LINK`
-    );
-
-    //////// MAKE REQUEST ////////
-
-    console.log("\nMake request...");
-    // if (true) {
-    //     return
-    // }
+    console.log("\nMaking request...");
 
     const functionsConsumer = new ethers.Contract(
         consumerAddress,
@@ -150,9 +63,7 @@ const makeRequestMumbai = async () => {
     const transaction = await functionsConsumer.sendRequest(
         source, // source
         Location.DONHosted,
-        // "0x", // user hosted secrets - encryptedSecretsUrls - empty in this example
         "0x", // don hosted secrets - slot ID - empty in this example
-        // 0, // don hosted secrets - version - empty in this example
         args,
         [], // bytesArgs - arguments can be encoded off-chain to bytes.
         subscriptionId,
@@ -228,13 +139,24 @@ const makeRequestMumbai = async () => {
                         `\n✅ Decoded response to ${ReturnType.uint256}: `,
                         decodedResponse
                     );
+                    return res.status(200).json({
+                        message: "success",
+                        data: Number(decodedResponse)
+                    })
                 }
             }
+
+            return res.status(500).json({
+                message: "error",
+                data: "error in response"
+            })
+
         } catch (error) {
             console.error("Error listening for response:", error);
+            return res.status(500).json({
+                message: "error",
+                data: "error listening for response"
+            })
         }
     })();
 };
-
-// export default makeRequestMumbai()
-makeRequestMumbai()
