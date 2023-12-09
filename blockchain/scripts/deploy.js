@@ -9,21 +9,20 @@ const fs = require("fs");
 
 async function main() {
   const JobPortal = await hre.ethers.getContractFactory("JobPortal");
-  const Kaamify = await hre.ethers.getContractFactory("xKaam");
+  const Codesafe = await hre.ethers.getContractFactory("xCode");
 
   const jobPortal = await JobPortal.deploy();
 
   const cap = ethers.utils.parseEther("1000000000");
-  const kaamify = await Kaamify.deploy(cap);
+  const codesafe = await Codesafe.deploy(cap);
 
   await jobPortal.deployed();
-  await kaamify.deployed();
+  await codesafe.deployed();
 
   fs.writeFileSync(
     "./config.js",
-    `export const contractAddress = "${jobPortal.address}";\nexport const kaamifyAddress = "${kaamify.address}";`
+    `export const contractAddress = "${jobPortal.address}";\nexport const codesafeAddress = "${codesafe.address}";`
   );
-
 }
 
 // We recommend this pattern to be able to use async/await everywhere

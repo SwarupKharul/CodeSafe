@@ -2,8 +2,8 @@
   "_format": "hh-sol-cache-2",
   "files": {
     "C:\\Users\\prana\\OneDrive\\Desktop\\push\\PeerTask\\blockchain\\contracts\\JobPortal.sol": {
-      "lastModificationDate": 1697839278099,
-      "contentHash": "b8bca5bd81f390c461723a0874015f88",
+      "lastModificationDate": 1697836774865,
+      "contentHash": "2d6095dbc0aac43821eb02eba84aa78f",
       "sourceName": "contracts/JobPortal.sol",
       "solcConfig": {
         "version": "0.8.20",

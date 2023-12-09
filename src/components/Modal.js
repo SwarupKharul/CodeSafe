@@ -1,9 +1,9 @@
 import React from "react";
 import Web3Modal from "web3modal";
 import { ethers } from "ethers";
-import { contractAddress, kaamifyAddress } from "../../blockchain/config";
+import { contractAddress, codesafeAddress } from "../../blockchain/config";
 import JobPortal from "../../blockchain/artifacts/contracts/JobPortal.sol/JobPortal.json";
-import xKaam from "../../blockchain/artifacts/contracts/xKaam.sol/xKaam.json";
+import xCode from "../../blockchain/artifacts/contracts/xCode.sol/xCode.json";
 import { uploadToIPFS } from "../utils/ipfs";
 import sendNotif from "@/utils/notifications";
 import { ToastContainer, toast } from "react-toastify";
@@ -48,7 +48,7 @@ const Modal = ({
       await tx.wait();
 
       console.log("Task created successfully! tokensa deduction....");
-      const token = new ethers.Contract(kaamifyAddress, xKaam.abi, signer);
+      const token = new ethers.Contract(codesafeAddress, xCode.abi, signer);
       const address = await signer.getAddress();
       console.log("tokn " + token);
       let transaction = await token.burn(
