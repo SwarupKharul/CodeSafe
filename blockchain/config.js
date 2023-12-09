@@ -1,2 +1,2 @@
-export const contractAddress = "0x066a3196cAe9749F527274FC373b73A6bBFE04Ca";
-export const kaamifyAddress = "0xd4b026fB1347C097c4b1791b04143aBBBB12b9E6";
+export const contractAddress = "0x81f37af16748c3CBe7f7Ba32858740D307Da824b";
+export const kaamifyAddress = "0x5de9bD52Ce72Ccdf5EF9544229BC648b9A222145";

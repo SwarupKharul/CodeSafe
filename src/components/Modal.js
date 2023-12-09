@@ -5,6 +5,7 @@ import { contractAddress, kaamifyAddress } from "../../blockchain/config";
 import JobPortal from "../../blockchain/artifacts/contracts/JobPortal.sol/JobPortal.json";
 import xKaam from "../../blockchain/artifacts/contracts/xKaam.sol/xKaam.json";
 import { uploadToIPFS } from "../utils/ipfs";
+import sendNotif from "@/utils/notifications";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Router from "next/router";
@@ -66,6 +67,13 @@ const Modal = ({
       setTimeout(() => {
         Router.push(`/myprojectview/${id}`);
       }, 5000);
+
+      // Send notification to manager
+      await sendNotif(
+        [await signer.getAddress()],
+        `Task ${tasksData.taskName} is added to Kaamify!`,
+        `Task ${tasksData.taskName} is now available for developers `
+      );
       setModalOpen(false);
     } catch (err) {
       console.log("Error: ", err);
