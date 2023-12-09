@@ -1,7 +1,7 @@
 {
   "_format": "hh-sol-artifact-1",
-  "contractName": "xKaam",
-  "sourceName": "contracts/xKaam.sol",
+  "contractName": "xCode",
+  "sourceName": "contracts/xCode.sol",
   "abi": [
     {
       "inputs": [

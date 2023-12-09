@@ -5,10 +5,10 @@ import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 import "@openzeppelin/contracts/token/ERC20/extensions/ERC20Capped.sol";
 import "@openzeppelin/contracts/token/ERC20/extensions/ERC20Burnable.sol";
 
-contract xKaam is ERC20Capped {
+contract xCode is ERC20Capped {
     address public owner;
 
-    constructor(uint256 cap) ERC20("xKaamToken", "xKaam") ERC20Capped(cap) {
+    constructor(uint256 cap) ERC20("xCodeToken", "xCode") ERC20Capped(cap) {
         owner = msg.sender;
         ERC20._mint(owner, 70000000 * (10 ** decimals()));
     }
