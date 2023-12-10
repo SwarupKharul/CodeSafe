@@ -32,6 +32,11 @@ module.exports = {
     //   gas: 2100000,
     //   gasPrice: 8000000000,
     // },
+    arbitrumGoerli: {
+      url: 'https://goerli-rollup.arbitrum.io/rpc',
+      chainId: 421613,
+      accounts: [PRIVATE_KEY]
+    },
     goerli: {
       url: `https://eth-goerli.g.alchemy.com/v2/${API_KEY}`,
 			accounts: [PRIVATE_KEY],
