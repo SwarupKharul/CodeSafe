@@ -34,7 +34,22 @@ module.exports = {
     // },
     goerli: {
       url: `https://eth-goerli.g.alchemy.com/v2/${API_KEY}`,
-			accounts: [PRIVATE_KEY],
+      accounts: [PRIVATE_KEY],
+    },
+    scrollTestnet: {
+      url: "https://sepolia-rpc.scroll.io/",
+      accounts: [PRIVATE_KEY],
+    },
+    zkEVM: {
+      url: `https://rpc.public.zkevm-test.net`,
+      accounts: [PRIVATE_KEY],
+    },
+    mantleTest: {
+      url: "https://rpc.testnet.mantle.xyz",
+      accounts: [PRIVATE_KEY],
+      allowUnlimitedContractSize: true,
+      gas: 5000000,
+      gasPrice: 50000000000,
     },
   },
   // etherscan: {
