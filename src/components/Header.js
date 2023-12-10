@@ -76,19 +76,19 @@ function Header() {
             )
           }
           <p>✅</p>
-          {/* {
+          {
             anonAadhaar?.status === "logged-out" && (
               <LogInWithAnonAadhaar />
             )
-          } */}
-          {/* {
+          }
+          {
             anonAadhaar?.status === "logged-in" &&
             //put a green tick here
             <>
               <p>✅</p>
               <LogInWithAnonAadhaar />
             </>
-          } */}
+          }
         </div>
       </header>
     </>
